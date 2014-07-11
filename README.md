@@ -1,7 +1,7 @@
 I will be building a minimalistic Log application using the NodeJs framework,
 HapiJs.
 
-With this app the you will be able to take note of your progress,
+With this app you will be able to take note of your progress,
 by creating logs of your daily performance in whichever area you wish.
 
 This app will start-off small and simple, allowing you to create new logs,
