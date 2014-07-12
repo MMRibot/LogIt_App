@@ -2,7 +2,7 @@ var Hapi = require('hapi');
 var path = require('path');
 var Joi = require('joi');
 
-var server = Hapi.createServer('localhost', 8080 || server.info.port, options);
+var server = Hapi.createServer('localhost', 8080, options);
 
 //set options for server
 var options = {
@@ -130,6 +130,10 @@ var routes = [
 
 server.route(routes);
 
+
 server.start(function(){
   console.log('Go to localhost:8080/');
 });
+
+
+module.exports = server;
