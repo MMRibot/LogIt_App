@@ -38,16 +38,28 @@ var createdLogs = [
     Exercise: 'Leg Press'
     }
 ];
-
-var allLogs = function(req, reply) {
+//create a place to store all our functions. This will make maintainability easier
+var logController = { };
+//This function will show all the logs created
+logController.allLogs = {
+  handler: function(req, reply) {
   reply(createdLogs);
+  }
 };
-
-var getLogs = function(req, reply) {
-  reply(createdLogs[req.params.id]);
+//This function will fetch specific logs according to the params id passed
+//If the params.id passed is larger than the number of current Logs, it will return a message
+logController.getLogs = {
+  handler: function(req, reply) {
+    if(req.params.id) {
+      if(createdLogs.length <= req.params.id) return reply('No Log found!')
+        return reply(createdLogs[req.params.id]);
+    }
+    reply(createdLogs);
+  }
 };
-
-var addLogs = {
+//This fucntion will create a newLog and then add it with the push method to
+//createdLogs. We also validate with Joi that the input data is of the correct type
+logController.addLogs = {
   handler: function(req, reply) {
   var newLog = {
     MuscleGroup: req.payload.MuscleGroup,
@@ -63,6 +75,15 @@ var addLogs = {
       'Date': Joi.string().required(),
       Exercise: Joi.string().required()
     }
+  }
+};
+//This function will delete a specified log from createdLogs with the slice method
+//If the selected log is not found, it will display a message informing that there is no log.
+logController.deleteLog = {
+  handler: function(req, reply) {
+    if (createdLogs.length <= req.params.id) return reply('No Logs found!');
+      createdLogs.splice(req.params.id, 1);
+      reply(true);
   }
 };
 
@@ -98,11 +119,13 @@ var routes = [
 //set home.html as main page
   {path: '/', method: 'GET', handler: {file: 'home.html'}},
 //go to cached logs page
-  {path: '/yourlogs/', method: 'GET', handler: allLogs},
+  {path: '/yourlogs/', method: 'GET', config: logController.allLogs},
 //set user home page
-  {path: '/yourlogs/{id?}', method: 'GET', handler: getLogs},
+  {path: '/yourlogs/{id?}', method: 'GET', config: logController.getLogs},
 //set path to add logs
-  {path: '/newlog', method: 'POST', config: addLogs}
+  {path: '/newlog', method: 'POST', config: logController.addLogs},
+//set the path to delete logs
+  {path: '/yourlogs/deletelog/{id}', method: 'DELETE', config: logController.deleteLog}
 ];
 
 server.route(routes);
