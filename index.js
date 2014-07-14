@@ -2,6 +2,8 @@ var Hapi = require('hapi');
 var path = require('path');
 var Joi = require('joi');
 
+var Couchdb = require('./lib/database');
+
 var server = Hapi.createServer('localhost', 8080, options);
 
 //set options for server
@@ -16,7 +18,7 @@ var options = {
   },
 
   views:  {
-    path: path.join(__dirname + '/templates'),
+    path: path.join(__dirname + './lib/templates'),
     engines: {
       html: require('handlebars')
     },
@@ -106,7 +108,7 @@ var routes = [
 //get path to styles folder
   /*{path: '/styles/{filename*}', method: 'GET', handler: {
     directory: {
-      path: path.join(__dirname + '/styles')//join current directory root folder with path to styles folder to get styles
+      path: path.join(__dirname + './lib/styles')//join current directory root folder with path to styles folder to get styles
       }
     }
   },
@@ -114,7 +116,7 @@ var routes = [
 //get path to images folder
   {path: '/public/{filename*}', method: 'GET', handler: {
     directory: {
-      path: path.join(__dirname + '/public')
+      path: path.join(__dirname + './lib/public')
       }
     }
   },
@@ -122,7 +124,7 @@ var routes = [
 //get path to scripts folder
   {path: '/scripts/{filename*}', method: 'GET', hanlder: {
     directory: {
-      path: path.join(__dirname + '/scripts')
+      path: path.join(__dirname + './lib/scripts')
       }
     }
   }
@@ -130,7 +132,7 @@ var routes = [
 //set routes to html files
 
 //set home.html as main page
-  {path: '/', method: 'GET', handler: {file: 'home.html'}},
+  {path: '/', method: 'GET', handler: {file: './lib/html/home.html'}},
 //go to cached logs page
   {path: '/yourlogs/{id?}', method: 'GET', handler: logController.getLogs},
 //set path to add logs
