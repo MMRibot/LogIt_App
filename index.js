@@ -51,19 +51,24 @@ var logController = { };
 //If the params.id passed is larger than the number of current Logs, it will return a message
 logController.getLogs = function(req, reply) {
   var id = req.params.id;
-    db.get(id, function(err, doc){
-      var id;
-    if(err) {
-      console.log('Request is undefined! Error: ' + err);
-    } if (id === 'undefined') {
-      id = '_all_docs';
-      return reply(doc);
-    } else {
-    console.log(doc);
-    return reply(doc);
-    }
-  });
-},
+    if (typeof id === 'undefined') {
+      db.get('_all_docs', function(err, doc){
+        console.log(doc);
+          return reply(doc);
+    });
+  }
+    if(id) {
+       db.get(id, function(err, doc) {
+        var id;
+          if(err) {
+            console.log('Error: ' + err);
+          } else {
+            console.log(doc);
+              return reply(doc);
+            }
+          });
+      }
+    },
 
 //This fucntion will create a newLog and then add it with the push method to
 //createdLogs. We also validate with Joi that the input data is of the correct type
@@ -103,7 +108,7 @@ logController.deleteLog = {
     validate: {
         params: { id:Joi.string().alphanum()} // make sure that our requested id is a string of the alphanumerical type with validation
     }
-};
+  };
 
 
 var routes = [
@@ -137,7 +142,7 @@ var routes = [
 
 //set home.html as main page
   {path: '/', method: 'GET', handler: {file: './lib/html/home.html'}},
-//go to cached logs page
+//get logs from databse
   {path: '/yourlogs/{id?}', method: 'GET', handler: logController.getLogs},
 //set path to add logs
   {path: '/newlog', method: 'POST', config: logController.addLogs},

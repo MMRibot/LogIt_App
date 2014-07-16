@@ -13,8 +13,7 @@ Lab.experiment("Basic All Log Tests", function(){
       //server.inject lets you simulate an http request
       server.inject(options, function(response) {
         Lab.expect(response.statusCode).to.equal(200);//Expect http response status code to be 200('OK')
-        Lab.expect(response.result).to.have.length(2);
-        Lab.expect(response.result).to.deep.equal(server.createdLogs);
+        Lab.expect(response.result).to.be.an('array');
       done();
       });
     });
@@ -23,7 +22,7 @@ Lab.experiment("Basic All Log Tests", function(){
   Lab.test('List Logs by id', function(done){
     var options = {
       method: 'GET',
-      url: '/yourlogs/0'
+      url: '/yourlogs/Back'
     };
 
     server.inject(options, function(response) {
@@ -33,10 +32,10 @@ Lab.experiment("Basic All Log Tests", function(){
   });
 
   //define tests
-  Lab.test('List Logs by id', function(done){
+  Lab.test('List Logs by id - Error', function(done){
     var options = {
       method: 'GET',
-      url: '/yourlogs/4'
+      url: '/yourlogs/foozball'
     };
 
     server.inject(options, function(response) {
