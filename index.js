@@ -1,8 +1,9 @@
 var Hapi = require('hapi');
 var path = require('path');
 var Joi = require('joi');
-
-var Couchdb = require('./lib/database');
+var cradle = require('cradle'); //we require the cradle framework that works with couchdb
+var db = new(cradle.Connection)().database('logs'); //set a connection to our database by passing the name of our databse as the only argument to
+                                                    //database(). Cradle takes care of the rest for us!
 
 var server = Hapi.createServer('localhost', 8080, options);
 
@@ -26,6 +27,9 @@ var options = {
   }
 };
 
+//Here we assign our function to getAllLogs for later use. This function will get our database and display it.
+
+
 var cache = server.cache('createdLogs', { expiresIn:60*60*1000 });
 
 var createdLogs = [
@@ -46,21 +50,20 @@ var logController = { };
 //This function will fetch specific logs according to the params id passed
 //If the params.id passed is larger than the number of current Logs, it will return a message
 logController.getLogs = function(req, reply) {
-    if (typeof req.params.id === "undefined" ) { //check to see if req.params.id is undefined
-      console.log('-----> REQ ID:',req.params.id);
-      return reply(createdLogs);//if the condition above is met, the output will be a list of all our existing logs
-    }
-    var id = Number(req.params.id);//make sure that req.params.id is a number
-
-    console.log('  - - - - ->> createdLogs.length: '+createdLogs.length +' | id:'+id + ' | id.length: '+req.params.id.length)
-
-    if(id <= createdLogs.length ) { //if id (which is now req.params.id) is smaller or equal to createdLogs length we will return the specified log
-      return reply(createdLogs[id]);
+  var id = req.params.id;
+    db.get(id, function(err, doc){
+      var id;
+    if(err) {
+      console.log('Request is undefined! Error: ' + err);
+    } if (id === 'undefined') {
+      id = '_all_docs';
+      return reply(doc);
     } else {
-      return reply('No Log found!').code(404); //else we will return an error message
+    console.log(doc);
+    return reply(doc);
     }
-
-};
+  });
+},
 
 //This fucntion will create a newLog and then add it with the push method to
 //createdLogs. We also validate with Joi that the input data is of the correct type
@@ -81,7 +84,7 @@ logController.addLogs = {
       Exercise: Joi.string().required()
     }
   }
-};
+},
 
 //This function will delete a specified log from createdLogs with the slice method
 //If the selected log is not found, it will display a message informing that there is no log.
@@ -100,7 +103,8 @@ logController.deleteLog = {
     validate: {
         params: { id:Joi.string().alphanum()} // make sure that our requested id is a string of the alphanumerical type with validation
     }
-  };
+};
+
 
 var routes = [
 //set and store routes in array for code readability
