@@ -49,45 +49,40 @@ var logController = { };
 
 //This function will fetch specific logs according to the params id passed
 logController.allLogs = function (req , reply) {
-  var id = req.params.id;
+  var id = req.params.id; //assign params to the id variable. This will allow us to access our databse through the document id
 
-      if(typeof id === 'undefined') {
-          db.get( '_all_docs' , function (err , doc){
-            if(err) {
-              console.dir(err);
-              return reply(err);
-            } else {
-          // console.log(doc);
-              return reply(doc);
-            }
-          });
-      }
+      db.get( '_all_docs' , function (err , doc){
+        //console.log(doc);
+          return reply(doc);//This simple function will display all the docs in our databse.
+      });
 };
 
 //This function gets the chosen log according to log id
-logController.chooseLogs = function (req , reply) {
+logController.chooseLogs = {
+  handler: function (req , reply) {
   var id = req.params.id;
   console.dir(req.params);
 
 
-    db.head(id , function (err , opt1, opt2 ) {
+    db.head(id , function (err , opt1, opt2 ) {//We use the db.head function to determine of there are any docs available in our database
       if(err) {
         console.log( 'This error: ' + err);
-        return err;
+        return err;//If an error occurs, we return the error
       }
 
-      if(opt2 !== '404' && id!=='undefined') {
-        db.get(id , function (err, doc) {
+      if(opt1 !== '404' && id!=='undefined') { //First we check to see if there is a doc by writing opt1 !== '404' and id!=='undefined'
+        db.get(id , function (err, doc) {      //If these two condition are not met, we return an error 404, with the message 'document no found'
            if(err) {
              console.log ( 'Error: ' + err );
              return reply( Hapi.error.notFound ('Document not found!'));
              } else {
                // console.log(doc);
-                 return reply(doc);
+                 return reply(doc); //If the conditions above are met, then we return the required document.
              }
          });
        }
    });
+ },
 };
 
 //This fucntion will create a newLog and then add it with the push method to
@@ -97,18 +92,36 @@ logController.addLogs = {
   var newLog = { //create a new log
     MuscleGroup: req.payload.MuscleGroup,
     'Date': req.payload.Date,
-    Exercise: req.payload.Exercise
+    Exercise: req.payload.Exercise,
+    Set1_Reps: req.payload.Set1_Reps,
+    Set2_Reps: req.payload.Set2_Reps,
+    Set3_Reps: req.payload.Set3_Reps,
+    Set1_Kg: req.payload.Set1_Kg,
+    Set2_Kg: req.payload.Set2_Kg,
+    Set3_Kg: req.payload.Set3_Kg
   };
-  createdLogs.push(newLog); //add the newly created log to our list of already existing logs
-  reply(newLog); //display the newly created log
+
+  db.save(newLog, function(err, res) {
+
+      return reply(res);
+  }); //add the newly created log to our list of already existing logs
+ //display the newly created log
   },
-  validate: { //validate the input. It MUST HAVE ( required! ) three key/value pairs and each value must be a string.
+
+/*  validate: {
+//validate the input. It MUST HAVE ( required! ) three key/value pairs and each value must be a string.
     payload: {
       MuscleGroup: Joi.string().required(),
       'Date': Joi.string().required(),
-      Exercise: Joi.string().required()
+      Exercise: Joi.string().required(),
+      Set1_Reps: Joi.number().required,
+      Set2_Reps: Joi.number().required,
+      Set3_Reps: Joi.number().required,
+      Set1_Kg: Joi.number().required,
+      Set2_Kg: Joi.number().required,
+      Set3_Kg: Joi.number().required
     }
-  }
+  }*/
 };
 
 //This function will delete a specified log from createdLogs with the slice method
@@ -165,9 +178,9 @@ var routes = [
 //get all Logs
   {path: '/yourlogs/', method: 'GET', handler: logController.allLogs},
 //choose logs from databse
-  {path: '/yourlogs/{id}', method: 'GET', handler: logController.chooseLogs},
+  {path: '/yourlogs/{id}', method: 'GET', config: logController.chooseLogs},
 //set path to add logs
-  {path: '/newlog', method: 'POST', config: logController.addLogs},
+  {path: '/yourlogs/newlog', method: 'POST', config: logController.addLogs},
 //set the path to delete logs
   {path: '/yourlogs/deletelog/{id}', method: 'DELETE', config: logController.deleteLog}
 ];

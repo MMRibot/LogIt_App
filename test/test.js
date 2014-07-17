@@ -18,6 +18,19 @@ Lab.experiment("Basic All Log Tests", function(){
       });
     });
 
+//define tests
+Lab.test("Main endpoint list all logs at url /yourlogs/ - Error", function(done){
+  var options = {
+    method: 'GET',
+    url: '/yourlogs'
+  };
+  //server.inject lets you simulate an http request
+  server.inject(options, function(response) {
+    Lab.expect(response.statusCode).to.equal(404);//Expect http response status code to be 200('OK')
+  done();
+  });
+});
+
   //define tests
   Lab.test('List Logs by id', function(done){
     var options = {
@@ -40,6 +53,7 @@ Lab.experiment("Basic All Log Tests", function(){
 
     server.inject(options, function(response) {
       Lab.expect(response.statusCode).to.equal(404);
+      Lab.expect(response.result.message).to.equal('Document not found!');
     done();
     });
   });
@@ -47,17 +61,23 @@ Lab.experiment("Basic All Log Tests", function(){
   Lab.test('Create new log', function(done){
     var options = {
       method: 'POST',
-      url: '/newlog',
+      url: '/yourlogs/newlog',
       payload: {
         MuscleGroup: 'Chest',
         'Date': '22-11-2222',
-        Exercise: "Inclined Press"
+        Exercise: "Inclined Press",
+        Set1_Reps: 12,
+        Set2_Reps: 12,
+        Set3_Reps: 12,
+        Set1_Kg: 55,
+        Set2_Kg: 66,
+        Set3_Kg: 66
       }
     };
 
     server.inject(options, function(response) {
       Lab.expect(response.statusCode).to.equal(200);
-      Lab.expect(response.result).to.deep.equal({MuscleGroup: 'Chest','Date': '22-11-2222',Exercise: "Inclined Press"});
+      Lab.expect(response.result).to.equal({MuscleGroup: 'Chest','Date': '22-11-2222',Exercise: "Inclined Press",Set1_Reps: 12, Set2_Reps: 12, Set3_Reps: 12, Set1_Kg: 55, Set2_Kg: 66,Set3_Kg: 66});
       Lab.expect(response.result).to.not.equal({MuscleGroup: 'Chest','Date': '22-11-2222'});
     done();
     });
