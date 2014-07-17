@@ -48,27 +48,47 @@ var createdLogs = [
 var logController = { };
 
 //This function will fetch specific logs according to the params id passed
-//If the params.id passed is larger than the number of current Logs, it will return a message
-logController.getLogs = function(req, reply) {
+logController.allLogs = function (req , reply) {
   var id = req.params.id;
-    if (typeof id === 'undefined') {
-      db.get('_all_docs', function(err, doc){
-        console.log(doc);
-          return reply(doc);
-    });
-  }
-    if(id) {
-       db.get(id, function(err, doc) {
-        var id;
-          if(err) {
-            console.log('Error: ' + err);
-          } else {
-            console.log(doc);
+
+      if(typeof id === 'undefined') {
+          db.get( '_all_docs' , function (err , doc){
+            if(err) {
+              console.dir(err);
+              return reply(err);
+            } else {
+          // console.log(doc);
               return reply(doc);
             }
           });
       }
-    },
+};
+
+//This function gets the chosen log according to log id
+logController.chooseLogs = function (req , reply) {
+  var id = req.params.id;
+  console.dir(req.params);
+
+
+    db.head(id , function (err , opt1, opt2 ) {
+      if(err) {
+        console.log( 'This error: ' + err);
+        return err;
+      }
+
+      if(opt2 !== '404' && id!=='undefined') {
+        db.get(id , function (err, doc) {
+           if(err) {
+             console.log ( 'Error: ' + err );
+             return reply( Hapi.error.notFound ('Document not found!'));
+             } else {
+               // console.log(doc);
+                 return reply(doc);
+             }
+         });
+       }
+   });
+};
 
 //This fucntion will create a newLog and then add it with the push method to
 //createdLogs. We also validate with Joi that the input data is of the correct type
@@ -89,7 +109,7 @@ logController.addLogs = {
       Exercise: Joi.string().required()
     }
   }
-},
+};
 
 //This function will delete a specified log from createdLogs with the slice method
 //If the selected log is not found, it will display a message informing that there is no log.
@@ -142,8 +162,10 @@ var routes = [
 
 //set home.html as main page
   {path: '/', method: 'GET', handler: {file: './lib/html/home.html'}},
-//get logs from databse
-  {path: '/yourlogs/{id?}', method: 'GET', handler: logController.getLogs},
+//get all Logs
+  {path: '/yourlogs/', method: 'GET', handler: logController.allLogs},
+//choose logs from databse
+  {path: '/yourlogs/{id}', method: 'GET', handler: logController.chooseLogs},
 //set path to add logs
   {path: '/newlog', method: 'POST', config: logController.addLogs},
 //set the path to delete logs
