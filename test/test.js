@@ -76,8 +76,9 @@ Lab.test("Main endpoint list all logs at url /yourlogs/ - Error", function(done)
     };
 
     server.inject(options, function(response) {
-      Lab.expect(response.statusCode).to.equal(200);
-      Lab.expect(response.result).to.equal({MuscleGroup: 'Chest','Date': '22-11-2222',Exercise: "Inclined Press",Set1_Reps: 12, Set2_Reps: 12, Set3_Reps: 12, Set1_Kg: 55, Set2_Kg: 66,Set3_Kg: 66});
+      Lab.expect(response.statusCode).to.equal(201);
+      Lab.expect(response.result.message).to.equal('Log successfully added to database!');
+      Lab.expect(response.result).to.equal({MuscleGroup: 'Chest','Date': new Date().toString(), Exercise: "Inclined Press",Set1_Reps: 12, Set2_Reps: 12, Set3_Reps: 12, Set1_Kg: 55, Set2_Kg: 66,Set3_Kg: 66});
       Lab.expect(response.result).to.not.equal({MuscleGroup: 'Chest','Date': '22-11-2222'});
     done();
     });

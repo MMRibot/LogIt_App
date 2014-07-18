@@ -73,7 +73,7 @@ logController.chooseLogs = {
       if(opt1 !== '404' && id!=='undefined') { //First we check to see if there is a doc by writing opt1 !== '404' and id!=='undefined'
         db.get(id , function (err, doc) {      //If these two condition are not met, we return an error 404, with the message 'document no found'
            if(err) {
-             console.log ( 'Error: ' + err );
+             console.log ( 'Error: ' + err + " || " + 'No document found!'  );
              return reply( Hapi.error.notFound ('Document not found!'));
              } else {
                // console.log(doc);
@@ -89,9 +89,10 @@ logController.chooseLogs = {
 //createdLogs. We also validate with Joi that the input data is of the correct type
 logController.addLogs = {
   handler: function(req, reply) {
+  var date = new Date().toString();
   var newLog = { //create a new log
     MuscleGroup: req.payload.MuscleGroup,
-    'Date': req.payload.Date,
+    'Date': date,
     Exercise: req.payload.Exercise,
     Set1_Reps: req.payload.Set1_Reps,
     Set2_Reps: req.payload.Set2_Reps,
@@ -102,24 +103,26 @@ logController.addLogs = {
   };
 
   db.save(newLog, function(err, res) {
-
-      return reply(res);
+    if(err){
+      return reply(Hapi.error.message('Was not able to add the log!'));
+    } else {
+      return res('Log successfully added to database!');
+    }
   }); //add the newly created log to our list of already existing logs
  //display the newly created log
-  },
+  }
 
-/*  validate: {
+  /*validate: {
 //validate the input. It MUST HAVE ( required! ) three key/value pairs and each value must be a string.
     payload: {
       MuscleGroup: Joi.string().required(),
-      'Date': Joi.string().required(),
       Exercise: Joi.string().required(),
       Set1_Reps: Joi.number().required,
-      Set2_Reps: Joi.number().required,
-      Set3_Reps: Joi.number().required,
+      Set2_Reps: Joi.number(),
+      Set3_Reps: Joi.number(),
       Set1_Kg: Joi.number().required,
-      Set2_Kg: Joi.number().required,
-      Set3_Kg: Joi.number().required
+      Set2_Kg: Joi.number(),
+      Set3_Kg: Joi.number()
     }
   }*/
 };
@@ -187,10 +190,11 @@ var routes = [
 
 server.route(routes);
 
-
+if(!module.parent){
 server.start(function(){
   console.log('Go to localhost:8080/');
 });
+}
 
 server.createdLogs = createdLogs;//export creastedLogs to the test.js file in the test folder
 module.exports = server;
