@@ -90,41 +90,18 @@ logController.chooseLogs = {
 logController.addLogs = {
   handler: function(req, reply) {
   var date = new Date().toString();
-  var newLog = { //create a new log
-    MuscleGroup: req.payload.MuscleGroup,
-    'Date': date,
-    Exercise: req.payload.Exercise,
-    Set1_Reps: req.payload.Set1_Reps,
-    Set2_Reps: req.payload.Set2_Reps,
-    Set3_Reps: req.payload.Set3_Reps,
-    Set1_Kg: req.payload.Set1_Kg,
-    Set2_Kg: req.payload.Set2_Kg,
-    Set3_Kg: req.payload.Set3_Kg
-  };
+  var newLog = req.payload;
 
   db.save(newLog, function(err, res) {
     if(err){
-      return reply(Hapi.error.message('Was not able to add the log!'));
+      console.log("Error: " + err);
+      return err;
     } else {
-      return res('Log successfully added to database!');
+      return res().code(201);
     }
   }); //add the newly created log to our list of already existing logs
  //display the newly created log
   }
-
-  /*validate: {
-//validate the input. It MUST HAVE ( required! ) three key/value pairs and each value must be a string.
-    payload: {
-      MuscleGroup: Joi.string().required(),
-      Exercise: Joi.string().required(),
-      Set1_Reps: Joi.number().required,
-      Set2_Reps: Joi.number(),
-      Set3_Reps: Joi.number(),
-      Set1_Kg: Joi.number().required,
-      Set2_Kg: Joi.number(),
-      Set3_Kg: Joi.number()
-    }
-  }*/
 };
 
 //This function will delete a specified log from createdLogs with the slice method

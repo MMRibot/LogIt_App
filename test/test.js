@@ -59,26 +59,23 @@ Lab.test("Main endpoint list all logs at url /yourlogs/ - Error", function(done)
   });
 
   Lab.test('Create new log', function(done){
+    var date = new Date().toString();
     var options = {
       method: 'POST',
       url: '/yourlogs/newlog',
       payload: {
         MuscleGroup: 'Chest',
-        'Date': '22-11-2222',
+        'Date': date,
         Exercise: "Inclined Press",
-        Set1_Reps: 12,
-        Set2_Reps: 12,
-        Set3_Reps: 12,
-        Set1_Kg: 55,
-        Set2_Kg: 66,
-        Set3_Kg: 66
+        Set1: {Reps:12, Kg:99},
+        Set2: {Reps:42, Kg:21},
+        Set3: {Reps:22, Kg:33}
       }
     };
 
     server.inject(options, function(response) {
       Lab.expect(response.statusCode).to.equal(201);
-      Lab.expect(response.result.message).to.equal('Log successfully added to database!');
-      Lab.expect(response.result).to.equal({MuscleGroup: 'Chest','Date': new Date().toString(), Exercise: "Inclined Press",Set1_Reps: 12, Set2_Reps: 12, Set3_Reps: 12, Set1_Kg: 55, Set2_Kg: 66,Set3_Kg: 66});
+      Lab.expect(response.result).to.equal({"ok": true});
       Lab.expect(response.result).to.not.equal({MuscleGroup: 'Chest','Date': '22-11-2222'});
     done();
     });
