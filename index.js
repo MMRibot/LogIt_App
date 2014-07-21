@@ -57,6 +57,25 @@ logController.allLogs = function (req , reply) {
       });
 };
 
+//This function will check the existence of a database
+/*logController.checkDb = {
+  handler: function(req, reply) {
+
+    db.exists(function (err, exists) {
+      if (exists) {
+        console.log('Database ' + req.params.dbname + ' exists!' + " || " + statusCode());
+        return reply('Database ' + req.params.dbname + ' exists!').code(200);
+      } else {
+        console.log('Database ' + req.params.dbname + ' does not exist!' + " || " + statusCode());
+        return reply('Database ' + req.params.dbname + ' does not exist!').code(404);
+      }
+    });
+  },
+  validate: {
+      params: { id:Joi.string().alphanum()} // make sure that our requested dbname   is a string of the alphanumerical type with validation
+  }
+};
+*/
 //This function gets the chosen log according to log id
 logController.chooseLogs = {
   handler: function (req , reply) {
@@ -64,12 +83,7 @@ logController.chooseLogs = {
   console.dir(req.params);
 
 
-    db.head(id , function (err , opt1, opt2 ) {//We use the db.head function to determine of there are any docs available in our database
-      if(err) {
-        console.log( 'This error: ' + err);
-        return err;//If an error occurs, we return the error
-      }
-
+    db.head(id , function (err , opt1, opt2 ) {//We use the db.head function to determine if there are any docs available in our database
       if(opt1 !== '404' && id!=='undefined') { //First we check to see if there is a doc by writing opt1 !== '404' and id!=='undefined'
         db.get(id , function (err, doc) {      //If these two condition are not met, we return an error 404, with the message 'document no found'
            if(err) {
@@ -89,18 +103,31 @@ logController.chooseLogs = {
 //createdLogs. We also validate with Joi that the input data is of the correct type
 logController.addLogs = {
   handler: function(req, reply) {
-  var date = new Date().toString();
-  var newLog = req.payload;
 
-  db.save(newLog, function(err, res) {
-    if(err){
-      console.log("Error: " + err);
-      return err;
-    } else {
-      return res().code(201);
-    }
-  }); //add the newly created log to our list of already existing logs
- //display the newly created log
+  var date = new Date().toString(); //set the date to be automatic and return the current date in a readable string
+
+  var newLog = {
+ // this will be the payload
+        Date: date,
+        Exercise: req.payload.Exercise,
+        MuscleGroup: req.payload.MuscleGroup,
+        Set1: req.payload.Set1,
+        Set2: req.payload.Set2,
+        Set3: req.payload.Set3
+  };
+
+    db.save(newLog, function(err, res) {
+      if(err){
+        console.log("Error: " + err + ' || ' + 'Status Code: ' + statusCode());
+        return res('Something went wrong when saving the document! ' + ' Status Code: ' + statusCode());
+      } else {
+        console.log('The document was created with sucess!' + statusCode());
+        return res('Document created and saved with succes!');
+      }
+      http_res.end(response);
+    }); //add the newly created log to our list of already existing logs
+   //display the newly created log
+
   }
 };
 
@@ -155,6 +182,8 @@ var routes = [
 
 //set home.html as main page
   {path: '/', method: 'GET', handler: {file: './lib/html/home.html'}},
+//List of databses
+//  {path: '/{dbname}', method: 'GET', config: logController.checkDb},
 //get all Logs
   {path: '/yourlogs/', method: 'GET', handler: logController.allLogs},
 //choose logs from databse
