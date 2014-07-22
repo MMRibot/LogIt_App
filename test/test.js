@@ -5,10 +5,12 @@ var server = require('../'); //require index.js
 //name our test units
 Lab.experiment("LogIt Tests", function(){
     //define the tests
+
+    //Test for existence of database
     Lab.test("List all logs at url /Logs", function(done){
       var options = {
         method: 'GET',
-        url: '/Logs/'
+        url: '/Logs'
       };
       //server.inject lets you simulate an http request
       //For our first test we do not have any documents in the databse.
