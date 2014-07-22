@@ -3,8 +3,8 @@ var path = require('path');
 var Joi = require('joi');
 //Connect to database.
 var couchbase = require('couchbase');
-var cluster = new couchbase.Cluster();
-var db = db || cluster.openBucket('default');//check to see if we have a connection. If there is none, created one!
+var db = db || new couchbase.Connection({host: 'localhost:8091', bucket: 'default'});
+//check to see if we have a connection. If there is none, created one!
 
 
 var server = Hapi.createServer('localhost', 8000);
@@ -14,12 +14,10 @@ var logCont = { };
 logCont.checkDb = {
   //The first function will check for the existence of a database
   handler: function(req, reply) {
-      var bucketName = req.params.dbname;
-      db.get(bucketName, function(err, result){
+      db.get(req.params.dbname, function(err, result){
         console.log(result);
-        return result;
+        return reply(result);
       });
-      return reply(result);
     }
 };
 
