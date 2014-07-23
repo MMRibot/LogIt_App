@@ -16,7 +16,10 @@ logCont.checkDb = {
   handler: function(req, reply) {
       db.get(req.params.dbname, function(err, result){
         console.log(result);
-        return reply(result);
+        result();
+        // if(typeof result === 'undefined') {
+        //   db.set()
+        // }
       });
     }
 };
