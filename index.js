@@ -2,13 +2,13 @@ var Hapi = require('hapi');
 var path = require('path');
 var Joi = require('joi');
 //Connect to database.
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+var simpledb = require('mongoose-simpledb');
 
+var db = db || simpledb.init('mongodb://localhost/test');
+console.log(db);
 //We have a pending connection to the test database running on localhost.
 //We now need to get notified if we connect successfully or if a connection error occurs:
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+
 
 
 
@@ -16,24 +16,24 @@ var server = Hapi.createServer('localhost', 8000);
 
 var logCont = { };
 
-// logCont.checkDb = {
-//   //The first function will check for the existence of a database
-//   handler: function(req, reply) {
-//
-//       });
-//     }
-// };
-//
-//
-// var routes = [
-//
-// //Route to custom database
-//   {path: '/{dbname}', method: 'GET', config: logCont.checkDb}
-//
-//
-// ];
-//
-// server.route(routes);
+logCont.checkCollection = {
+  //The first function will check for the existence of a Collection (A group of documents)
+  handler: function(req, reply) {
+
+      });
+    }
+};
+
+
+var routes = [
+
+//Route to custom database
+  {path: '/{collname}', method: 'GET', config: logCont.checkCollection}
+
+
+];
+
+server.route(routes);
 
 
 server.start(function(){
