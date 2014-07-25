@@ -92,9 +92,8 @@ See this video in particular to learn how to connect to *MongoDb* while using **
 The module used in this video (*mongoose-simpledb*) can be found at: https://www.npmjs.org/package/mongoose-simpledb
 
 
+---
 
-```
-In summery, so far my main problem has been finding a way to connect to
+**In summery, so far my main problem has been finding a way to connect to
 the databases with a module that is easy to use, well maintained and
-tested and with examples using tha Hapi.js framework!
-```
+tested and with examples using tha Hapi.js framework!**
