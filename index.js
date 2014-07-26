@@ -15,10 +15,14 @@ var server = Hapi.createServer('localhost', 8000);
 
 var logCont = { };
 
-logCont.checkCollection = {
-  //The first function will check for the existence of a Collection (A group of documents)
-  handler: function(req, reply) {
 
+logCont.addDoc = {
+  //Add document with the setter function
+  handler: function(req, reply){
+    db.set("persons", {"FirstName": "Mario"}, function(result){
+      if(err) console.error('Error: ' + err);
+      console.log(result);
+    });
   }
 };
 
@@ -26,8 +30,7 @@ logCont.checkCollection = {
 var routes = [
 
 //Route to custom database
-  {path: '/{docname}', method: 'GET', config: logCont.checkCollection}
-
+  {path: '/userCreator', method: 'POST', config: logCont.addDoc}
 
 ];
 

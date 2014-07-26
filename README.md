@@ -17,6 +17,7 @@ delete logs, view and update existing logs.*
 - [x] Begin coding with tests (This is always best practice)
 - [ ] Validation
 - [ ] Authentication
+- [x] Choose Database
 - [ ] Implement Database
 - [ ] Implement Views
 - [ ] UI
@@ -83,6 +84,10 @@ Also see: http://docs.couchbase.com/couchbase-devguide-2.5/#introduction-to-couc
 
 For understanding views : http://docs.couchbase.com/couchbase-devguide-2.5/#finding-data-with-views
 
+Another simple tutorial using Node.js and Couchbase: http://tugdualgrall.blogspot.co.uk/2013/03/easy-application-development-with.html
+
+For the Node.js Api, list of methods: http://www.couchbase.com/autodocs/couchbase-node-client-1.0.0-beta/Connection.html
+
 ---
 
 ###MongoDb
@@ -119,3 +124,110 @@ The module used in this video (*mongoose-simpledb*) can be found at: https://www
 **In summery, so far my main problem has been finding a way to connect to
 the databases with a module that is easy to use, well maintained and
 tested and with examples using tha Hapi.js framework!**
+
+---
+
+Using CouchBase
+---
+
+I have run into the following error on one of my many iterations through deciding on which database to use.
+
+```bash
+Marios-MacBook-Air:LogIt mario$ npm test
+
+> LogIt@0.0.0 test /Users/mario/LogIt
+> ./node_modules/lab/bin/lab -c -v && ./node_modules/lab/bin/lab -r html -o ./test/coverage.html
+
+{ queryhosts: null,
+  _bucket: 'default',
+  _cb: { _handleRestResponse: [Function] },
+  connected: false }
+Debug: hapi, internal, implementation, error
+    ReferenceError: Uncaught error: err is not defined
+    at /Users/mario/LogIt/index.js:81:108
+    at Bucket._invokeStorage (/Users/mario/LogIt/node_modules/couchbase/lib/bucket.js:616:7)
+    at Bucket.upsert (/Users/mario/LogIt/node_modules/couchbase/lib/bucket.js:992:8)
+    at Bucket.set (/Users/mario/LogIt/node_modules/couchbase/lib/bucket.js:999:22)
+    at logCont.addDoc.handler (/Users/mario/LogIt/index.js:80:54)
+    at Object.internals.handler (/Users/mario/LogIt/node_modules/hapi/lib/handler.js:92:27)
+    at /Users/mario/LogIt/node_modules/hapi/lib/handler.js:32:23
+    at internals.Protect.run (/Users/mario/LogIt/node_modules/hapi/lib/protect.js:53:5)
+    at exports.execute (/Users/mario/LogIt/node_modules/hapi/lib/handler.js:26:22)
+    at /Users/mario/LogIt/node_modules/hapi/lib/request.js:323:13
+    at iterate (/Users/mario/LogIt/node_modules/hapi/node_modules/async/lib/async.js:149:13)
+    at /Users/mario/LogIt/node_modules/hapi/node_modules/async/lib/async.js:160:25
+    at /Users/mario/LogIt/node_modules/hapi/node_modules/hoek/lib/index.js:539:22
+    at process._tickDomainCallback (node.js:463:13)
+LogIt Tests
+  ✖1) Create User
+
+
+ 1 of 1 tests failed:
+
+  1) LogIt Tests Create User:
+
+      actual expected
+
+      500    201
+
+      expected 500 to equal 201
+
+      at /Users/mario/LogIt/test/test.js:28:44
+
+
+ No global variable leaks detected.
+
+ Coverage: 89.66%
+
+ index.js missing coverage on line(s): 6, 23, 24
+
+npm ERR! Test failed.  See above for more details.
+npm ERR! not ok code 0
+```
+
+
+**And now a look at my test code **
+
+```javascript
+var Lab = require('lab'); //require the lab module
+var server = require('../'); //require index.js
+//write individual tests for your functions with Lab.experiment
+var couchbase = require('couchbase').Mock;
+var db = new couchbase.Connection();
+
+
+//name our test units
+Lab.experiment("LogIt Tests", function(){
+    //define the tests
+
+    Lab.before(function(done){
+      db.set("persons", {"FirstName": "Mario"}, function(result){
+        return result;
+      });
+      setTimeout(function () { done(); } , 1000);
+    });
+
+
+    Lab.test("Create User", function(done){
+      var options = {
+        method: 'POST',
+        url: '/userCreator'
+      };
+      //server.inject lets you simulate an http request
+      //For our first test we do not have any documents in the databse.
+      server.inject(options, function(response) {
+        Lab.expect(response.statusCode).to.equal(201);//Expect http response status code to be 404(Not Found)
+        //Lab.expect(response.result.value).to.equal(undefined);//there is no collection at the time
+      done();
+      });
+    });
+
+
+
+});
+```
+
+I have tryied to use the Lab.before() function because my test was timing out before after 2 secs.
+But now instead I get a 500 Error. Bad request.
+
+Need to figure that out!

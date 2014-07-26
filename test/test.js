@@ -9,35 +9,28 @@ var db = new couchbase.Connection();
 Lab.experiment("LogIt Tests", function(){
     //define the tests
 
-    //Test for the existence of a Document
-    Lab.test("Verify existence of a Document - FAIL", function(done){
+    Lab.before(function(done){
+      db.set("persons", {"FirstName": "Mario"}, function(result){
+        return result;
+      });
+      setTimeout(function () { done(); } , 1000);
+    });
+
+
+    Lab.test("Create User", function(done){
       var options = {
-        method: 'GET',
-        url: '/test'
+        method: 'POST',
+        url: '/userCreator'
       };
       //server.inject lets you simulate an http request
       //For our first test we do not have any documents in the databse.
       server.inject(options, function(response) {
-        Lab.expect(response.statusCode).to.equal(404);//Expect http response status code to be 404(Not Found)
-        Lab.expect(response.result.value).to.equal(undefined);//there is no collection at the time
+        Lab.expect(response.statusCode).to.equal(201);//Expect http response status code to be 404(Not Found)
+        //Lab.expect(response.result.value).to.equal(undefined);//there is no collection at the time
       done();
       });
     });
 
-    //Test for creation of database
-    // Lab.test("Test creation of bucket.", function(done){
-    //   var options = {
-    //     method: 'GET',
-    //     url: '/Logs'
-    //   };
-    //   //server.inject lets you simulate an http request
-    //   //For our first test we do not have any documents in the databse.
-    //   server.inject(options, function(response) {
-    //     Lab.expect(response.statusCode).to.equal(200);//created a bucket(code 201)
-    //     Lab.expect(response.result.message).to.equal('Database Logs created with success!');
-    //   done();
-    //   });
-    // });
 
 
 });
