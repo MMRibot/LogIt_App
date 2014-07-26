@@ -7,8 +7,8 @@ var server = require('../'); //require index.js
 Lab.experiment("LogIt Tests", function(){
     //define the tests
 
-    //Test for the existence of a Collection
-    Lab.test("Verify existence of a Collection - FAIL", function(done){
+    //Test for the existence of a Document
+    Lab.test("Verify existence of a Document - FAIL", function(done){
       var options = {
         method: 'GET',
         url: '/test'

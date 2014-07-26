@@ -11,6 +11,21 @@ delete logs, view and update existing logs.*
 
 ---
 
+##To Do :
+
+- [x] Design Layout
+- [x] Begin coding with tests (This is always best practice)
+- [ ] Validation
+- [ ] Authentication
+- [ ] Implement Database
+- [ ] Implement Views
+- [ ] UI
+- [ ] Test everything works
+- [ ] Deploy App
+
+
+---
+
 ##Why Hapi?
 
 ####For the following reasons:
@@ -86,7 +101,7 @@ db.once('open', function callback () {
 
 I seem to have found an alternative with the *mongoose-simpledb* module.
 
-See this video in particular to learn how to connect to *MongoDb* while using **Hapi.js**:
+See this video to "learn" how to connect to *MongoDb* while using **Hapi.js**(The framework used in the video is **express**, but the usage of the connection instance is the same):
 * https://www.youtube.com/watch?v=CIPbmPUKyMI
 
 The module used in this video (*mongoose-simpledb*) can be found at: https://www.npmjs.org/package/mongoose-simpledb
