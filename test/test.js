@@ -1,6 +1,8 @@
 var Lab = require('lab'); //require the lab module
 var server = require('../'); //require index.js
 //write individual tests for your functions with Lab.experiment
+var couchbase = require('couchbase').Mock;
+var db = new couchbase.Connection();
 
 
 //name our test units

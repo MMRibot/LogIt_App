@@ -16,8 +16,8 @@
     "lab": "^3.2.1"
   },
   "dependencies": {
+    "couchbase": "^2.0.0-dp1",
     "hapi": "^6.0.2",
-    "mongoose-simpledb": "^3.1.5",
     "request": "^2.37.0"
   }
 }

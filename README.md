@@ -65,7 +65,7 @@ I also found that I had trouble using or finding frameworks available to connect
 
 ###CouchBase
 
-My first warning, is that when you install *CouchBase*, you should always install the 'Developer Preview':
+My first warning, is that after you install *CouchBase* from the website(http://www.couchbase.com/), you should always install the 'Developer Preview' as show in this tutorial (https://github.com/nelsonic/time):
 
 ```
 npm install couchbase@2.0.0-dp1 --save
@@ -75,6 +75,9 @@ The documentation for *CouchBase* is easy to follow and there are many examples.
 If you need an example reference using *couchBase* with *Hapi*, go to https://github.com/nelsonic/time
 
 I ended up dumping *CouchBase* from my dependencies for no specific reason in particular other than learning MongoDb could be a major advantage at this time, for Mongo is currently one of the most popular databases in use.
+But I might re-implement it.
+
+For additional information on setting-up *ChouchBase* on a Mac, go to https://github.com/couchbaselabs/docs-ng/blob/master/content/couchbase-manual-2.0/installing-and-upgrading.markdown#mac-os-x-installation
 
 ---
 
