@@ -79,6 +79,10 @@ But I might re-implement it.
 
 For additional information on setting-up *ChouchBase* on a Mac, go to https://github.com/couchbaselabs/docs-ng/blob/master/content/couchbase-manual-2.0/installing-and-upgrading.markdown#mac-os-x-installation
 
+Also see: http://docs.couchbase.com/couchbase-devguide-2.5/#introduction-to-couchbase
+
+For understanding views : http://docs.couchbase.com/couchbase-devguide-2.5/#finding-data-with-views
+
 ---
 
 ###MongoDb
