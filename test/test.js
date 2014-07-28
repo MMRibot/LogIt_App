@@ -33,5 +33,26 @@ Lab.experiment("CouchBase Tests", function() {
     });
   });
 
-  
+  Lab.test("Payload testing", function(done){
+    var payload = {
+      "personId": "Nuno",
+      "Date": {"type": "date", "default": "Date.now"},
+      "musclegroup": "Arms",
+      "exercise": "Bicep Curl",
+      "sets": [
+        {"reps": "10", "Kg": "20"},
+        {"reps": "11", "Kg": "30"}
+      ]
+    };
+    db.set('workout1', payload, function(err, result) {
+      db.get('workout1', function(err, result) {
+
+        Lab.expect(result.value.sets[0].reps).to.equal("10");
+        done();
+      });
+    });
+
+  });
+
+
 });

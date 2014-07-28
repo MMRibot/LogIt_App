@@ -14,7 +14,11 @@ delete logs, view and update existing logs.*
 ##To Do :
 
 - [x] Design Layout
+- [x] Implement RDD (Readme Driven Developement)
 - [x] Begin coding with tests (This is always best practice)
+- [ ] Define function do add person to database
+- [ ] Define function to add workouts per user to database
+- [ ] Define function to retrieve user's workouts by date and muscle-group and date/muscle-group or exercise
 - [ ] Validation
 - [ ] Authentication
 - [x] Choose Database
