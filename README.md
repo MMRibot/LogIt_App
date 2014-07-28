@@ -88,6 +88,8 @@ Another simple tutorial using Node.js and Couchbase: http://tugdualgrall.blogspo
 
 For the Node.js Api, list of methods: http://www.couchbase.com/autodocs/couchbase-node-client-1.0.0-beta/Connection.html
 
+For a tutorial using CouchBase, Node and Angular - https://www.youtube.com/watch?v=Ynr8E5Rf1aA
+
 ---
 
 ###MongoDb

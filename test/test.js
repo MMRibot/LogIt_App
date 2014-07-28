@@ -4,33 +4,34 @@ var server = require('../'); //require index.js
 var couchbase = require('couchbase').Mock;
 var db = new couchbase.Connection();
 
+//define the tests
 
-//name our test units
-Lab.experiment("LogIt Tests", function(){
-    //define the tests
+Lab.experiment("CouchBase Tests", function() {
+  // tests
+  Lab.test("Set & Get a record", function(done) {
+    db.set('personstest', {"FirstName":'Steve'}, function(err, result) {
 
-    Lab.before(function(done){
-      db.set("persons", {"FirstName": "Mario"}, function(result){
-        return result;
+      db.get('personstest', function(err, result) {
+
+        Lab.expect(result.value.FirstName).to.equal('Steve');
+        // console.log(result.value);
+        done();
       });
-      setTimeout(function () { done(); } , 1000);
     });
+  });
 
+  Lab.test("Landing page", function(done){
+    var options = {
+      url: '/',
+      method: 'GET'
+    };
 
-    Lab.test("Create User", function(done){
-      var options = {
-        method: 'POST',
-        url: '/userCreator'
-      };
-      //server.inject lets you simulate an http request
-      //For our first test we do not have any documents in the databse.
-      server.inject(options, function(response) {
-        Lab.expect(response.statusCode).to.equal(201);//Expect http response status code to be 404(Not Found)
-        //Lab.expect(response.result.value).to.equal(undefined);//there is no collection at the time
+    server.inject(options, function(response){
+      Lab.expect(response.statusCode).to.equal(200);
+      Lab.expect(response.result).to.have.length(52);
       done();
-      });
     });
+  });
 
-
-
+  
 });
