@@ -3,5 +3,5 @@
   "date": {"type" : "date", "default": "Date.now"},
   "muscleGroup": "string",
   "exercise": "string",
-  "sets": {"reps": "number", "Kg": "number"}
+  "sets": [{"reps": "number", "Kg": "number"}]
 }

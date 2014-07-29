@@ -23,7 +23,7 @@ delete logs, view and update existing logs.*
 - [ ] Authentication
 - [x] Choose Database
 - [ ] Implement Database
-- [ ] Implement Views
+- [ ] Implement Hapi Views
 - [ ] UI
 - [ ] Test everything works
 - [ ] Deploy App
