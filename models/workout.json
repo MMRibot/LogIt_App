@@ -1,4 +1,4 @@
-{
+module.exports = {
   "personId": "string",
   "date": {"type" : "date", "default": "Date.now"},
   "muscleGroup": "string",

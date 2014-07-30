@@ -18,7 +18,7 @@ delete logs, view and update existing logs.*
 - [x] Begin coding with tests (This is always best practice)
 - [ ] Define function do add person to database
 - [ ] Define function to add workouts per user to database
-- [ ] Define function to retrieve user's workouts by date and muscle-group and date/muscle-group or exercise
+- [ ] Define function to retrieve user's workouts by exercise and returns date, muscle group and sets
 - [ ] Validation
 - [ ] Authentication
 - [x] Choose Database
@@ -75,6 +75,7 @@ My first warning, is that after you install *CouchBase* from the website(http://
 ```
 npm install couchbase@2.0.0-dp1 --save
 ```
+>When you proceed with the setup in the Admin Web Console, I would suggest that you avoid setting your username as **Admin**. I ran in to an issue before where I could not sign-in to my Web Console after loggin out and had set username to Admin. I had to completely remove CouchBase form my Mac and re-install it and then set my username to something other than **Admin** and it is now working fine! I do not know if it there was some sort of conflict with a probable default username **Admin** or **Administrator**. 
 
 The documentation for *CouchBase* is easy to follow and there are many examples.
 If you need an example reference using *couchBase* with *Hapi*, go to https://github.com/nelsonic/time
@@ -236,4 +237,18 @@ Lab.experiment("LogIt Tests", function(){
 I have tryied to use the Lab.before() function because my test was timing out before after 2 secs.
 But now instead I get a 500 Error. Bad request.
 
-Need to figure that out!
+**The solution found is rather simpler. Remove ```Lab.before``` and the ```Timeout function``` and ```server.inject``` and then immediately set a document to the databse and get it back, as shown:**
+
+```javascript
+Lab.test("Set & Get a record", function(done) {
+  db.set('personstest', {"FirstName":'Steve'}, function(err, result) {
+
+    db.get('personstest', function(err, result) {
+
+      Lab.expect(result.value.FirstName).to.equal('Steve');
+      // console.log(result.value);
+      done();
+    });
+  });
+});
+```
