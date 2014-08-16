@@ -75,7 +75,7 @@ My first warning, is that after you install *CouchBase* from the website(http://
 ```
 npm install couchbase@2.0.0-dp1 --save
 ```
->When you proceed with the setup in the Admin Web Console, I would suggest that you avoid setting your username as **Admin**. I ran in to an issue before where I could not sign-in to my Web Console after loggin out and had set username to Admin. I had to completely remove CouchBase form my Mac and re-install it and then set my username to something other than **Admin** and it is now working fine! I do not know if it there was some sort of conflict with a probable default username **Admin** or **Administrator**. 
+>When you proceed with the setup in the Admin Web Console, I would suggest that you avoid setting your username as **Admin**. I ran in to an issue before where I could not sign-in to my Web Console after loggin out and had set username to Admin. I had to completely remove CouchBase form my Mac and re-install it and then set my username to something other than **Admin** and it is now working fine! I do not know if it there was some sort of conflict with a probable default username **Admin** or **Administrator**.
 
 The documentation for *CouchBase* is easy to follow and there are many examples.
 If you need an example reference using *couchBase* with *Hapi*, go to https://github.com/nelsonic/time
@@ -252,3 +252,5 @@ Lab.test("Set & Get a record", function(done) {
   });
 });
 ```
+
+>I am going to attempt a change and use the express framework. - 16 Aug 2014

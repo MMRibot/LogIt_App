@@ -2,6 +2,7 @@ var Hapi = require('hapi');
 var path = require('path');
 var Joi = require('joi');
 
+
 //Connect to database.
 var couchbase = require('couchbase');
 var db = db || new couchbase.Connection({host: 'localhost:8091', bucket: 'default'}, function(err) {//using the beer-sample bucket
@@ -20,6 +21,21 @@ console.log(db);
 
 var server = Hapi.createServer('localhost', 8080);
 
+function listUserExercises (req, res){
+  db.view("_design/dev_workout", 'exercise').query(function(err, values){
+    //we will fetch all the exercise docs based on the personId
+    var keys = _.pluck(values, 'personId');
+
+  db.getMulti(keys, function(err, results){
+    var listExercises = _.map(results, function(v, k) {
+            v.value.personId = k;
+            return v.value;
+      });
+    });
+  });
+}
+
+
 var logCont = { };
 
 //creat hanlder function for landing page
@@ -28,6 +44,9 @@ logCont.landingPage = {
     reply ('Welcome to LogIt! Application is under construction!');
   }
 };
+
+
+
 
 //
 logCont.addNewDoc = {
@@ -42,32 +61,38 @@ logCont.addNewDoc = {
       "sets": [{"reps": "number", "Kg": "number"}]
     };
 
-    db.add("personId", payload , function(result){
+
+
+    db.addMulti(payload , function(result){
       if(err) console.error('Error: ' + err);
       console.log(result);
       reply ("Log added successfully!");
+      process.exit(0);
     });
   }
+  //validation -----
 };
+
+
+
 
 logCont.fetchDoc = {
   handler: function(req, reply){
-    var fname = req.params.name;
-    db.get(fname,  function(err, result){
-      if(err) console.log('Error: ' + err);
-        console.log(result.value.date);
-        return reply("Your request to " + fname + " :" + "<br> Date: " + result.value.date.default + "<br> Muscle Group: " + result.value.musclegroup + "<br>Exercise: " + result.value.exercise + "<br>Sets: " + result.value.Sets);
-    });
+    console.log(listUserExercises);
+        return reply(listUserExercises);
   }
 };
+
+
+
 
 
 var routes = [
 
 //Route to custom database
   {path: '/', method: 'GET', config: logCont.landingPage},
-  {path: '/addnewuser/{personId}', method: 'POST', config: logCont.addNewDoc},
-  {path: '/logs/{name}', method: 'GET', config: logCont.fetchDoc}
+  {path: '/addnewlog/user=personId/{newlog}', method: 'POST', config: logCont.addNewDoc},
+  {path: '/logs/{user}', method: 'GET', config: logCont.fetchDoc}
 ];
 
 server.route(routes);
