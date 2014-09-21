@@ -1,11 +1,12 @@
 var Hapi = require('hapi');
 var path = require('path');
 var Joi = require('joi');
+var _ = require('underscore');
 
 
 //Connect to database.
 var couchbase = require('couchbase');
-var db = db || new couchbase.Connection({host: 'localhost:8091', bucket: 'default'}, function(err) {//using the beer-sample bucket
+var db = db || new couchbase.Connection({host: 'localhost:8091', bucket: 'default'}, function(err) {
     if (err) {
       console.log('Connection Error', err);
     } else {

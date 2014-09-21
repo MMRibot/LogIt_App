@@ -1,3 +1,7 @@
+##Note:
+>This application is no longer effective. The file name has been changed to "loGym".
+
+
 *I will be building a minimalistic Log application using the awesome NodeJs framework,
 HapiJs, developed by Walmart Labs.*
 
@@ -15,7 +19,7 @@ delete logs, view and update existing logs.*
 
 - [x] Design Layout
 - [x] Implement RDD (Readme Driven Developement)
-- [x] Begin coding with tests (This is always best practice)
+- [x] Begin coding with tests (This is always best practice!)
 - [ ] Define function do add person to database
 - [ ] Define function to add workouts per user to database
 - [ ] Define function to retrieve user's workouts by exercise and returns date, muscle group and sets
@@ -26,7 +30,7 @@ delete logs, view and update existing logs.*
 - [ ] Implement Hapi Views
 - [ ] UI
 - [ ] Test everything works
-- [ ] Deploy App
+- [ ] Deploy App to Heroku
 
 
 ---

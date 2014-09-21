@@ -1,10 +1,15 @@
 {
   "name": "LogIt",
   "version": "0.0.0",
-  "description": "",
+  "description": "Allows the creation and logging of gym stats. Basically a gym log.",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
-    "test": "./node_modules/lab/bin/lab -c -v && ./node_modules/lab/bin/lab -r html -o ./test/coverage.html"
+    "test": "./node_modules/lab/bin/lab -c -v && ./node_modules/lab/bin/lab -r html -o ./test/coverage.html",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "MMendes999",
   "license": "ISC",
@@ -13,7 +18,8 @@
     "catbox-redis": "^1.0.3",
     "handlebars": "^2.0.0-alpha.4",
     "joi": "^4.6.1",
-    "lab": "^3.2.1"
+    "lab": "^3.2.1",
+    "underscore": "^1.6.0"
   },
   "dependencies": {
     "couchbase": "^2.0.0-dp1",
